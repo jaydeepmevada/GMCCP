@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import API from '../../services/api';
+import API, { MEDIA_BASE_URL } from '../../services/api';
 import StatusBadge from '../../components/common/StatusBadge';
 import PriorityBadge from '../../components/common/PriorityBadge';
 import Loader from '../../components/common/Loader';
@@ -89,7 +89,7 @@ const OfficerComplaintDetail = () => {
             <p className="text-gray-400 text-sm mb-4">{complaint.description}</p>
 
             {complaint.imageUrl && (
-              <img src={`${import.meta.env.VITE_API_URL?.replace('/api', '')}${complaint.imageUrl}`} alt="Complaint" className="w-full max-h-60 object-cover rounded-lg border mb-4" />
+              <img src={`${MEDIA_BASE_URL}${complaint.imageUrl}`} alt="Complaint" className="w-full max-h-60 object-cover rounded-lg border mb-4" />
             )}
 
             <div className="grid grid-cols-2 gap-3 text-sm">
