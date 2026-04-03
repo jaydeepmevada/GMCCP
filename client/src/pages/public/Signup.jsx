@@ -38,7 +38,9 @@ const Signup = () => {
       toast.success('Registration successful! Welcome to GMCCP.');
       navigate('/dashboard');
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Registration failed');
+      console.error('Registration Error:', error);
+      const errorMsg = error.response?.data?.message || error.message || 'Registration failed';
+      toast.error(errorMsg);
     } finally {
       setLoading(false);
     }
