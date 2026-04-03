@@ -1,0 +1,190 @@
+GMCCP - MERN Stack Website Development Plan (Step-by-step, Hindi + English keywords)
+
+Generated for: Prakash Chauhan
+Date: 2025-08-17
+
+1) सबसे पहले क्या सीखें (कठिनाई क्रम में)
+- HTML & CSS (responsive basics: meta viewport, flexbox, grid)
+- JavaScript (ES6+, promises, async/await, fetch)
+- Git + GitHub (repo, branches, commit, push)
+- Node.js + npm (modules, package.json)
+- Express.js (REST API)
+- MongoDB + Mongoose (schema, models, queries)
+- React (functional components, hooks: useState, useEffect, useContext)
+- react-router-dom (v6) (routing/navigation)
+- Axios (API calls)
+- Authentication (JWT, bcrypt)
+- File upload basics (FormData) + Cloud storage (Cloudinary / S3)
+- Optional: Tailwind CSS, react-i18next (i18n), Nodemailer / SendGrid
+
+2) Tools & Environment (Install once)
+- VSCode, Node.js (LTS), Git
+- MongoDB Atlas account (or local MongoDB)
+- Cloudinary account or AWS S3 for images
+- SMTP provider (SendGrid) or use Nodemailer + Ethereal for dev emails
+- Postman for API testing, Chrome/DevTools
+
+3) Project structure (root)
+gmccp/
+  server/        <-- Node + Express (port 5000)
+  client/        <-- React app (port 3000 or Vite 5173)
+  .gitignore
+  README.md
+
+4) Quick setup commands (terminal)
+# Create folders
+mkdir gmccp && cd gmccp
+mkdir server client
+
+# Backend (server)
+cd server
+npm init -y
+npm i express mongoose dotenv bcryptjs jsonwebtoken cors multer nodemailer
+npm i -D nodemon
+
+# Frontend (client) - Vite (recommended)
+cd ../client
+npm create vite@latest client -- --template react
+cd client
+npm install
+
+# OR Create React App alternative
+# npx create-react-app client
+
+5) .env (server/.env) - example
+PORT=5000
+MONGO_URI=your_mongo_connection_string
+JWT_SECRET=supersecretkey
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_USER=your_smtp_user
+SMTP_PASS=your_smtp_pass
+CLOUDINARY_URL=cloudinary://key:secret@name
+FROM_EMAIL=no-reply@yourdomain.com
+FRONTEND_URL=http://localhost:3000
+
+6) Basic Express server (server/index.js) - summary
+- Setup express, cors, bodyParser (express.json)
+- Connect to MongoDB using mongoose.connect(MONGO_URI)
+- Mount routes: /api/auth, /api/complaints, /api/admin, /api/cities
+- Start server on process.env.PORT
+
+7) Mongoose schemas (models)
+User:
+- name, email (unique), passwordHash, phone?, role (user/admin), preferredLanguage, timestamps
+
+Complaint:
+- user (ObjectId), city, title, description, photoUrl, status (submitted/verified/resolved), assignedTo, timestamps
+
+City (config):
+- name, emailForCorporation, contactPerson, active(boolean)
+
+EmailLog (optional):
+- complaintId, to, subject, body, status, sentAt
+
+8) API endpoints (overview)
+Auth:
+- POST /api/auth/register  -> register (name,email,password)
+- POST /api/auth/login     -> login -> returns JWT
+
+Cities:
+- GET /api/cities          -> list cities for dropdown
+
+Complaints (user):
+- POST /api/complaints     -> create complaint (multipart/form-data: photo + fields)
+- GET /api/complaints      -> list complaints for logged-in user
+- GET /api/complaints/:id  -> complaint detail
+
+Admin (protected):
+- GET /api/admin/complaints            -> list all complaints (filters: city/status)
+- POST /api/admin/complaints/:id/verify -> set status verified + trigger email to city
+- POST /api/admin/complaints/:id/send-email -> manual send
+- GET /api/admin/email-logs            -> view email logs
+
+9) Authentication flow (backend + frontend)
+- Register: hash password with bcrypt, save user
+- Login: compare password, sign JWT (payload: id, role), return token
+- Protect routes: middleware reads Authorization header, verifies JWT, sets req.user
+- Frontend: store token in localStorage; include Authorization header on API calls
+
+10) Frontend pages/components (approx. 9 pages)
+1. Home / Landing (info + language selector top-right)
+2. Register
+3. Login
+4. Submit Complaint (form)
+5. My Complaints (list)
+6. Complaint Detail (view + status)
+7. Admin Login / Admin Dashboard (list + filters)
+8. Admin Complaint Detail (verify, send email, mark resolved)
+9. Profile / Settings (change language, update info)
+
+11) React routing & navigation (example - App.jsx)
+- Use BrowserRouter, Routes, Route from react-router-dom v6
+- ProtectedRoute component checks auth token and optionally role (adminOnly)
+- Example routes: /, /login, /register, /submit, /my-complaints, /admin/*
+
+12) Submit complaint form (frontend)
+- Use <form> with controlled inputs and <input type="file" /> for photo
+- Build FormData and send via axios with multipart/form-data and Authorization header
+
+13) File upload (backend)
+- Use multer for multipart handling
+- Upload to Cloudinary/S3 and save returned URL to complaint.photoUrl
+
+14) Auto-send email on verify (server snippet summary)
+- Use Nodemailer or SendGrid
+- After admin verifies complaint, call sendComplaintEmail(complaint, city.emailForCorporation)
+- Save email result in EmailLog model
+
+15) Multi-language (i18n)
+- Install react-i18next + i18next
+- Create locales for en, hi, gu under public/locales
+- Wrap app with I18nextProvider and use useTranslation()
+- Language selector saves choice to localStorage and optionally user profile
+
+16) CORS & Axios config
+- Backend: app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }))
+- Frontend: axios instance with baseURL 'http://localhost:5000' and request interceptor to add Authorization token
+
+17) How to run locally (short)
+1) Backend:
+cd gmccp/server
+npm install
+create .env
+npm run dev   # using nodemon - server runs on 5000
+
+2) Frontend:
+cd gmccp/client
+npm install
+npm start     # CRA -> http://localhost:3000 OR Vite -> npm run dev (http://localhost:5173)
+
+18) Testing & Debugging
+- Postman for APIs
+- Browser DevTools Network tab
+- Server console logs
+- Optional: Jest + Supertest for unit/integration tests
+
+19) Security & Production checklist
+- Hash passwords (bcrypt)
+- HTTPS + SSL in production
+- Strong JWT secret and token policies
+- Rate limiting on auth endpoints
+- Validate inputs (express-validator)
+- Backup DB, logging, and monitoring
+
+20) Deployment (brief)
+- Frontend: Vercel / Netlify
+- Backend: Render / Heroku / DigitalOcean / AWS
+- MongoDB: Atlas production cluster
+- Setup env vars on hosting platform and configure domain + SSL
+
+21) Deliverables I can generate for you (pick any)
+- Full server skeleton with routes and models
+- Frontend skeleton with routes and protected pages
+- Submit complaint form + backend upload route
+- Admin dashboard sample
+- i18n translation files (en, hi, gu)
+- .env.example and README with run steps
+
+Notes:
+Reply which deliverable you want first and I will paste ready-to-run code snippets that you can copy and run on your machine.

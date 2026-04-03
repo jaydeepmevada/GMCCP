@@ -1,0 +1,67 @@
+Create a modern, professional, and government-style web application called 
+“GMCCP – Gujarat Municipal Corporation Complaint Portal”.
+
+Purpose:
+Citizens can submit government-related complaints with image upload and track complaint status.
+
+Target Users:
+Citizens of Gujarat.
+
+Design Style:
+- Clean government theme
+- Blue, white, and light saffron color palette
+- Professional and trustworthy look
+- Simple and accessible UI
+- Mobile responsive
+
+Pages Required:
+
+1) Home Page
+- Hero section with bold heading:
+  “Raise Your Complaint. Improve Your City.”
+- CTA buttons:
+  - Register Complaint
+  - Track Complaint
+- Government-style banner
+- Statistics section (Total Complaints, Resolved, In Progress)
+- How It Works section (3 steps)
+- Footer with contact info
+
+2) User Authentication
+- Login page
+- Signup page
+- Clean card-based layout
+
+3) Complaint Submission Page
+- Form fields:
+  - City
+  - State
+  - Address
+  - Image Upload
+- Submit button
+- Form validation UI
+
+4) Dashboard
+- Show user complaints
+- Status badge:
+  - New (Blue)
+  - In Progress (Orange)
+  - Resolved (Green)
+- Clean card layout
+
+5) Admin Panel
+- View all complaints
+- Update status dropdown
+- Filter by city/state/status
+
+Extra UI Features:
+- Navbar with logo “GMCCP”
+- User profile dropdown
+- Modern cards with shadow
+- Smooth animations
+- Clean typography
+- Accessible color contrast
+
+Technology preference:
+React + Tailwind CSS UI style.
+Modern component-based layout.
