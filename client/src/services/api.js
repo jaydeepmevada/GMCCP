@@ -6,8 +6,9 @@ const rawApiBaseUrl = envApiBaseUrl?.replace(/\/$/, '') || '/api';
 if (typeof window !== 'undefined') {
   const isProductionHost = !['localhost', '127.0.0.1'].includes(window.location.hostname);
   const pointsToLocalBackend = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?\/?/i.test(rawApiBaseUrl);
+  const isSameOriginApi = rawApiBaseUrl === '/api';
 
-  if (isProductionHost && (!envApiBaseUrl || pointsToLocalBackend)) {
+  if (isProductionHost && !isSameOriginApi && (!envApiBaseUrl || pointsToLocalBackend)) {
     console.warn(
       'GMCCP API misconfiguration: set VITE_API_URL in your frontend deployment environment to your public backend URL.'
     );

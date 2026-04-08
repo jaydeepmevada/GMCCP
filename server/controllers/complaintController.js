@@ -2,6 +2,27 @@ const { validationResult } = require('express-validator');
 const Complaint = require('../models/Complaint');
 const Category = require('../models/Category');
 const User = require('../models/User');
+const { cloudinary, hasCloudinaryConfig } = require('../config/cloudinary');
+
+const uploadImage = async (file) => {
+  if (!file) return '';
+
+  if (file.path) {
+    return `/uploads/${file.filename}`;
+  }
+
+  if (!hasCloudinaryConfig || !file.buffer) {
+    return '';
+  }
+
+  const dataUri = `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
+  const result = await cloudinary.uploader.upload(dataUri, {
+    folder: 'gmccp/complaints',
+    resource_type: 'image',
+  });
+
+  return result.secure_url;
+};
 
 // @desc    Create a new complaint
 // @route   POST /api/complaints
@@ -15,10 +36,7 @@ const createComplaint = async (req, res) => {
 
     const { title, description, category, city, state, address } = req.body;
 
-    let imageUrl = '';
-    if (req.file) {
-      imageUrl = `/uploads/${req.file.filename}`;
-    }
+    const imageUrl = await uploadImage(req.file);
 
     // Auto-assign department and officer based on category
     let departmentId = null;
