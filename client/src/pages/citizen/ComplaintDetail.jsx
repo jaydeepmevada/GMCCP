@@ -36,7 +36,7 @@ const ComplaintDetail = () => {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
+    <div className="max-w-3xl mx-auto px-4 py-8 animate-fade-in-up">
       <Link to="/dashboard" className="inline-flex items-center gap-1 text-blue-400 hover:underline text-sm mb-6">
         <HiArrowLeft className="w-4 h-4" /> Back to Dashboard
       </Link>

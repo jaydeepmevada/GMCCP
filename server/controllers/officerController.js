@@ -1,10 +1,68 @@
 const Complaint = require('../models/Complaint');
 
+const assignDepartmentBacklog = async (officer) => {
+  if (!officer?.department) {
+    return;
+  }
+
+  await Complaint.updateMany(
+    {
+      department: officer.department,
+      assignedTo: { $exists: false },
+    },
+    {
+      $set: {
+        assignedTo: officer._id,
+      },
+    }
+  );
+
+  await Complaint.updateMany(
+    {
+      department: officer.department,
+      assignedTo: officer._id,
+      status: 'New',
+    },
+    {
+      $set: {
+        status: 'In Progress',
+      },
+    }
+  );
+
+  await Complaint.updateMany(
+    {
+      department: officer.department,
+      assignedTo: null,
+    },
+    {
+      $set: {
+        assignedTo: officer._id,
+      },
+    }
+  );
+
+  await Complaint.updateMany(
+    {
+      department: officer.department,
+      assignedTo: officer._id,
+      status: 'New',
+    },
+    {
+      $set: {
+        status: 'In Progress',
+      },
+    }
+  );
+};
+
 // @desc    Get assigned complaints for officer
 // @route   GET /api/officer/complaints
 // @access  Officer
 const getAssignedComplaints = async (req, res) => {
   try {
+    await assignDepartmentBacklog(req.user);
+
     const { status, priority, page = 1, limit = 10 } = req.query;
     // Officer can only see complaints assigned to them AND in their department
     const filter = { assignedTo: req.user._id };
@@ -184,6 +242,8 @@ const closeComplaint = async (req, res) => {
 // @access  Officer
 const getOfficerStats = async (req, res) => {
   try {
+    await assignDepartmentBacklog(req.user);
+
     const officerId = req.user._id;
     const [total, inProgress, resolved, closed] = await Promise.all([
       Complaint.countDocuments({ assignedTo: officerId }),

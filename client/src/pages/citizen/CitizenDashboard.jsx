@@ -1,16 +1,19 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import API from '../../services/api';
 import ComplaintCard from '../../components/complaints/ComplaintCard';
 import Loader from '../../components/common/Loader';
-import { HiPlus, HiClipboardList, HiClock, HiCheckCircle, HiInbox } from 'react-icons/hi';
+import { HiPlus, HiClipboardList, HiClock, HiCheckCircle, HiInbox, HiChatAlt2 } from 'react-icons/hi';
 
 const CitizenDashboard = () => {
   const { user } = useAuth();
+  const location = useLocation();
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
+
+  const greetingText = location.state?.isNewRegistration ? 'Welcome' : 'Welcome back';
 
   useEffect(() => { fetchComplaints(); }, [filter]);
 
@@ -37,13 +40,18 @@ const CitizenDashboard = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 animate-fade-in-up">
         <div>
           <h1 className="text-2xl font-bold text-gray-100 tracking-tight">
-            Welcome back, <span className="gradient-text">{user?.name?.split(' ')[0]}</span> 👋
+            {greetingText}, <span className="gradient-text">{user?.name?.split(' ')[0]}</span> 👋
           </h1>
           <p className="text-gray-500 text-sm mt-1">Manage your complaints and track their status</p>
         </div>
-        <Link to="/submit-complaint" className="inline-flex items-center gap-2 bg-gradient-to-r from-[#ff9933] to-[#f08c28] hover:from-[#e6862e] hover:to-[#d97a22] text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg shadow-orange-400/20 hover:shadow-xl hover:shadow-orange-400/30 active:scale-[0.98]">
-          <HiPlus className="w-5 h-5" /> New Complaint
-        </Link>
+        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+          <Link to="/feedback" className="inline-flex items-center justify-center gap-2 border border-blue-700 text-blue-400 hover:bg-blue-900/30 font-semibold py-3 px-6 rounded-xl transition-all duration-300 active:scale-[0.98]">
+            <HiChatAlt2 className="w-5 h-5" /> Give Feedback
+          </Link>
+          <Link to="/submit-complaint" className="inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#ff9933] to-[#f08c28] hover:from-[#e6862e] hover:to-[#d97a22] text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 shadow-lg shadow-orange-400/20 hover:shadow-xl hover:shadow-orange-400/30 active:scale-[0.98]">
+            <HiPlus className="w-5 h-5" /> New Complaint
+          </Link>
+        </div>
       </div>
 
       {/* Stats */}

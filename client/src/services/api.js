@@ -45,7 +45,9 @@ API.interceptors.request.use(
 API.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const isAuthLoginRequest = error.config?.url?.includes('/auth/login');
+
+    if (error.response?.status === 401 && !isAuthLoginRequest) {
       localStorage.removeItem('gmccp_token');
       localStorage.removeItem('gmccp_user');
       window.location.href = '/login';

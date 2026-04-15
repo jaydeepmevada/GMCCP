@@ -35,7 +35,7 @@ const Feedback = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
+    <div className="max-w-3xl mx-auto px-4 py-8 animate-fade-in-up">
       <h1 className="text-2xl font-bold text-gray-100 mb-1">Give Feedback</h1>
       <p className="text-gray-500 text-sm mb-8">Share your experience with GMCCP</p>
 

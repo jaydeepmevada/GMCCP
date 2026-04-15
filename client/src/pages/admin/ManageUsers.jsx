@@ -11,7 +11,6 @@ const ManageUsers = () => {
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState(searchParams.get('role') || '');
   const [editingUser, setEditingUser] = useState(null);
-  const [departments, setDepartments] = useState([]);
 
   // Sync roleFilter with URL search params
   useEffect(() => {
@@ -21,7 +20,7 @@ const ManageUsers = () => {
     }
   }, [searchParams]);
 
-  useEffect(() => { fetchUsers(); fetchDepartments(); }, [roleFilter]);
+  useEffect(() => { fetchUsers(); }, [roleFilter]);
 
   const fetchUsers = async () => {
     try {
@@ -32,13 +31,6 @@ const ManageUsers = () => {
       setUsers(res.data.users);
     } catch (err) { console.error(err); }
     finally { setLoading(false); }
-  };
-
-  const fetchDepartments = async () => {
-    try {
-      const res = await API.get('/departments');
-      setDepartments(res.data.departments);
-    } catch (err) { console.error(err); }
   };
 
   const handleSearch = (e) => {
@@ -60,7 +52,13 @@ const ManageUsers = () => {
     try {
       await API.put(`/admin/users/${userId}`, { isActive: !isActive });
       toast.success(isActive ? 'User deactivated' : 'User activated');
-      fetchUsers();
+      setUsers((currentUsers) => (
+        isActive
+          ? currentUsers.filter((user) => user._id !== userId)
+          : currentUsers.map((user) => (
+              user._id === userId ? { ...user, isActive: true } : user
+            ))
+      ));
     } catch (err) { toast.error('Failed'); }
   };
 
@@ -71,7 +69,7 @@ const ManageUsers = () => {
   };
 
   return (
-    <div>
+    <div className="animate-fade-in-up">
       <h1 className="text-2xl font-bold text-gray-100 mb-6">Manage Users</h1>
 
       {/* Filters */}

@@ -27,7 +27,7 @@ const OfficerDashboard = () => {
   ] : [];
 
   return (
-    <div>
+    <div className="animate-fade-in-up">
       <h1 className="text-2xl font-bold text-gray-100 mb-1">Officer Dashboard</h1>
       <p className="text-gray-500 text-sm mb-8">Welcome, {user?.name}. Manage your assigned complaints.</p>
 

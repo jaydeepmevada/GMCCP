@@ -1,5 +1,14 @@
 const { validationResult } = require('express-validator');
 const Department = require('../models/Department');
+const User = require('../models/User');
+
+const slugifyDepartmentName = (value = '') => (
+  value
+    .toLowerCase()
+    .replace(/&/g, 'and')
+    .replace(/[^a-z0-9]+/g, '.')
+    .replace(/(^\.|\.$)/g, '')
+);
 
 // @desc    Get all departments
 // @route   GET /api/departments
@@ -33,7 +42,36 @@ const createDepartment = async (req, res) => {
     }
 
     const department = await Department.create({ name, description, contactEmail, contactPerson });
-    res.status(201).json({ message: 'Department created successfully', department });
+
+    const officerName = contactPerson?.trim() || `${name} Officer`;
+    const officerEmailBase = `${slugifyDepartmentName(name)}.officer`;
+    let officerEmail = `${officerEmailBase}@gmccp.gov.in`;
+    let emailSuffix = 1;
+
+    while (await User.findOne({ email: officerEmail })) {
+      officerEmail = `${officerEmailBase}${emailSuffix}@gmccp.gov.in`;
+      emailSuffix++;
+    }
+
+    const defaultOfficerPassword = 'officer123';
+    const officer = await User.create({
+      name: officerName,
+      email: officerEmail,
+      password: defaultOfficerPassword,
+      phone: '',
+      role: 'officer',
+      department: department._id,
+    });
+
+    res.status(201).json({
+      message: 'Department and officer created successfully',
+      department,
+      officerCredentials: {
+        name: officer.name,
+        email: officer.email,
+        password: defaultOfficerPassword,
+      },
+    });
   } catch (error) {
     console.error('CreateDepartment error:', error);
     res.status(500).json({ message: 'Server error' });

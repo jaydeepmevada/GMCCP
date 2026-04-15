@@ -35,7 +35,7 @@ const OfficerReports = () => {
   if (loading) return <div className="text-center py-12 text-gray-400">Loading...</div>;
 
   return (
-    <div>
+    <div className="animate-fade-in-up">
       <div className="flex items-center gap-3 mb-6">
         <HiDocumentReport className="w-8 h-8 text-blue-400" />
         <h1 className="text-2xl font-bold text-gray-100">My Reports</h1>

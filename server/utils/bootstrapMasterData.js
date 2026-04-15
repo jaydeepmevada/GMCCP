@@ -1,5 +1,6 @@
 const Department = require('../models/Department');
 const Category = require('../models/Category');
+const User = require('../models/User');
 
 const defaultDepartments = [
   { name: 'Water Supply', description: 'Water supply and drainage department', contactEmail: 'water@gmccp.gov.in', contactPerson: 'Mr. Patel' },
@@ -24,11 +25,46 @@ const defaultCategories = [
   { name: 'Other', description: 'Any other municipal complaint', departmentName: 'Sanitation' },
 ];
 
+const defaultOfficers = [
+  { name: 'Rajesh Patel', email: 'water.officer@gmccp.gov.in', password: 'officer123', phone: '9876543211', role: 'officer', departmentName: 'Water Supply' },
+  { name: 'Amit Shah', email: 'roads.officer@gmccp.gov.in', password: 'officer123', phone: '9876543212', role: 'officer', departmentName: 'Roads & Infrastructure' },
+  { name: 'Priya Desai', email: 'sanitation.officer@gmccp.gov.in', password: 'officer123', phone: '9876543213', role: 'officer', departmentName: 'Sanitation' },
+  { name: 'Vikram Mehta', email: 'electricity.officer@gmccp.gov.in', password: 'officer123', phone: '9876543214', role: 'officer', departmentName: 'Electricity' },
+  { name: 'Dr. Suresh Joshi', email: 'health.officer@gmccp.gov.in', password: 'officer123', phone: '9876543215', role: 'officer', departmentName: 'Health' },
+  { name: 'Kiran Trivedi', email: 'parks.officer@gmccp.gov.in', password: 'officer123', phone: '9876543216', role: 'officer', departmentName: 'Parks & Gardens' },
+  { name: 'Nitin Raval', email: 'building.officer@gmccp.gov.in', password: 'officer123', phone: '9876543217', role: 'officer', departmentName: 'Building & Town Planning' },
+];
+
+const defaultAdmins = [
+  {
+    name: 'Admin Jaydeep',
+    email: 'jaydeepadmin@gmccp.gov.in',
+    password: 'jaydeep@admin1',
+    phone: '8160279471',
+    role: 'admin',
+  },
+  {
+    name: 'Admin Prakash',
+    email: 'prakashadmin@gmccp.gov.in',
+    password: 'prakash@admin2',
+    phone: '8160279472',
+    role: 'admin',
+  },
+  {
+    name: 'Admin Jayesh',
+    email: 'jayeshadmin@gmccp.gov.in',
+    password: 'jayesh@admin3',
+    phone: '8160279473',
+    role: 'admin',
+  },
+];
+
 const bootstrapMasterData = async () => {
   const existingCategoryCount = await Category.countDocuments();
   const existingDepartmentCount = await Department.countDocuments();
+  const existingAdminCount = await User.countDocuments({ role: 'admin' });
 
-  if (existingCategoryCount > 0 && existingDepartmentCount > 0) {
+  if (existingCategoryCount > 0 && existingDepartmentCount > 0 && existingAdminCount > 0) {
     return;
   }
 
@@ -55,7 +91,38 @@ const bootstrapMasterData = async () => {
     });
   }
 
-  console.log('Default departments and categories ensured');
+  let createdAdminCount = 0;
+  if (existingAdminCount < defaultAdmins.length) {
+    for (const admin of defaultAdmins) {
+      const existingAdmin = await User.findOne({ email: admin.email });
+      if (!existingAdmin) {
+        await User.create(admin);
+        createdAdminCount++;
+      }
+    }
+  }
+
+  let createdOfficerCount = 0;
+  for (const officer of defaultOfficers) {
+    const existingOfficer = await User.findOne({ email: officer.email });
+    if (!existingOfficer) {
+      await User.create({
+        name: officer.name,
+        email: officer.email,
+        password: officer.password,
+        phone: officer.phone,
+        role: officer.role,
+        department: departmentMap.get(officer.departmentName),
+      });
+      createdOfficerCount++;
+    }
+  }
+
+  const summaryParts = ['Default departments and categories ensured'];
+  if (createdAdminCount > 0) summaryParts.push(`${createdAdminCount} admin user(s) ensured`);
+  if (createdOfficerCount > 0) summaryParts.push(`${createdOfficerCount} officer user(s) ensured`);
+
+  console.log(summaryParts.join(', '));
 };
 
 module.exports = bootstrapMasterData;

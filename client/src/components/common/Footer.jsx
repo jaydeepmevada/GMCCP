@@ -2,9 +2,9 @@ import { Link } from 'react-router-dom';
 import { HiMail, HiPhone, HiLocationMarker } from 'react-icons/hi';
 import { LogoFull } from './Logo';
 
-const Footer = () => {
+const Footer = ({ className = '' }) => {
   return (
-    <footer className="bg-gradient-to-b from-gray-950 to-black text-gray-400">
+    <footer className={`bg-gradient-to-b from-gray-950 to-black text-gray-400 ${className}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
           {/* Brand */}

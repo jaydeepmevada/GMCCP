@@ -25,7 +25,7 @@ const OfficerComplaints = () => {
   };
 
   return (
-    <div>
+    <div className="animate-fade-in-up">
       <h1 className="text-2xl font-bold text-gray-100 mb-6">Assigned Complaints</h1>
 
       <div className="flex gap-3 mb-6">

@@ -36,7 +36,7 @@ const Support = () => {
   const statusColor = { Open: 'text-blue-400 bg-blue-50', Responded: 'text-green-700 bg-green-50', Closed: 'text-gray-300 bg-gray-100' };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
+    <div className="max-w-3xl mx-auto px-4 py-8 animate-fade-in-up">
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-100">Help & Support</h1>

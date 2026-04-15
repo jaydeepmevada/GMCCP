@@ -31,7 +31,7 @@ const TrackComplaint = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-12">
+    <div className="max-w-2xl mx-auto px-4 py-12 animate-fade-in-up">
       <div className="text-center mb-8">
         <h1 className="text-2xl font-bold text-gray-100 mb-1">Track Your Complaint</h1>
         <p className="text-gray-500">Enter your complaint ID to check the current status</p>

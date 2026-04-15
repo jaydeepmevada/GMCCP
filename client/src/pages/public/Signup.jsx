@@ -36,7 +36,7 @@ const Signup = () => {
       const { confirmPassword, ...registerData } = formData;
       await register(registerData);
       toast.success('Registration successful! Welcome to GMCCP.');
-      navigate('/dashboard');
+      navigate('/dashboard', { state: { isNewRegistration: true } });
     } catch (error) {
       console.error('Registration Error:', error);
       const errorMsg = error.response?.data?.message || error.message || 'Registration failed';

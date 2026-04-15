@@ -42,7 +42,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
+    <div className="max-w-2xl mx-auto px-4 py-8 animate-fade-in-up">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-100">My Profile</h1>
         {!editing ? (

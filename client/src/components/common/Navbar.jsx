@@ -78,6 +78,9 @@ const Navbar = () => {
                     <NavLink to="/submit-complaint" className={navLinkClass}>
                       <span className="px-3 py-2 rounded-lg hover:bg-gray-800 transition-colors inline-block">Complaint</span>
                     </NavLink>
+                    <NavLink to="/feedback" className={navLinkClass}>
+                      <span className="px-3 py-2 rounded-lg hover:bg-gray-800 transition-colors inline-block">Give Feedback</span>
+                    </NavLink>
                   </>
                 )}
 

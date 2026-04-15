@@ -12,6 +12,8 @@ const SubmitComplaint = () => {
   const [formData, setFormData] = useState({
     title: '', description: '', category: '', city: '', state: 'Gujarat', address: '', image: null,
   });
+  const selectedCategory = categories.find((cat) => cat._id === formData.category);
+  const selectedDepartmentName = selectedCategory?.department?.name || '';
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -82,6 +84,16 @@ const SubmitComplaint = () => {
             <option value="">Select a category</option>
             {categories.map((cat) => <option key={cat._id} value={cat._id}>{cat.name}</option>)}
           </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-semibold text-gray-300 mb-2">Responsible Department</label>
+          <input
+            type="text"
+            value={selectedDepartmentName || 'Select category first'}
+            className="input-field bg-gray-800 cursor-not-allowed"
+            readOnly
+          />
         </div>
 
         <div>

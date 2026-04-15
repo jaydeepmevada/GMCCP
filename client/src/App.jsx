@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext';
 
@@ -48,115 +49,138 @@ import GenerateReports from './pages/admin/GenerateReports';
 import ManageSupport from './pages/admin/ManageSupport';
 import ManageFeedbacks from './pages/admin/ManageFeedbacks';
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [pathname]);
+
+  return null;
+}
+
+function AppContent() {
+  const { pathname } = useLocation();
+  const isPanelRoute = pathname.startsWith('/admin') || pathname.startsWith('/officer');
+
+  return (
+    <>
+      <ScrollToTop />
+
+      <div className="min-h-screen flex flex-col bg-gray-950">
+        <Navbar />
+
+        <main className="flex-1">
+          <Routes>
+            {/* ===== PUBLIC ROUTES ===== */}
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/feedbacks" element={<PublicFeedbacks />} />
+            <Route path="/track-complaint" element={<TrackComplaint />} />
+            <Route path="/unauthorized" element={<Unauthorized />} />
+
+            {/* ===== CITIZEN ROUTES ===== */}
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <CitizenDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/submit-complaint"
+              element={
+                <ProtectedRoute>
+                  <SubmitComplaint />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/complaints/:id"
+              element={
+                <ProtectedRoute>
+                  <ComplaintDetail />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/support"
+              element={
+                <ProtectedRoute>
+                  <Support />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/feedback"
+              element={
+                <ProtectedRoute>
+                  <Feedback />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* ===== OFFICER ROUTES ===== */}
+            <Route
+              path="/officer"
+              element={
+                <RoleRoute roles={['officer']}>
+                  <OfficerLayout />
+                </RoleRoute>
+              }
+            >
+              <Route index element={<OfficerDashboard />} />
+              <Route path="complaints" element={<OfficerComplaints />} />
+              <Route path="complaints/:id" element={<OfficerComplaintDetail />} />
+              <Route path="reports" element={<OfficerReports />} />
+            </Route>
+
+            {/* ===== ADMIN ROUTES ===== */}
+            <Route
+              path="/admin"
+              element={
+                <RoleRoute roles={['admin']}>
+                  <AdminLayout />
+                </RoleRoute>
+              }
+            >
+              <Route index element={<AdminDashboard />} />
+              <Route path="users" element={<ManageUsers />} />
+              <Route path="complaints" element={<ManageComplaints />} />
+              <Route path="complaints/:id" element={<AdminComplaintDetail />} />
+              <Route path="categories" element={<ManageCategories />} />
+              <Route path="departments" element={<ManageDepartments />} />
+              <Route path="reports" element={<GenerateReports />} />
+              <Route path="support" element={<ManageSupport />} />
+              <Route path="feedbacks" element={<ManageFeedbacks />} />
+            </Route>
+
+            {/* ===== 404 ===== */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
+
+        <Footer className={isPanelRoute ? 'lg:ml-64' : ''} />
+      </div>
+    </>
+  );
+}
+
 function App() {
   return (
     <Router>
       <AuthProvider>
-        <div className="min-h-screen flex flex-col bg-gray-950">
-          <Navbar />
-
-          <main className="flex-1">
-            <Routes>
-              {/* ===== PUBLIC ROUTES ===== */}
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/feedbacks" element={<PublicFeedbacks />} />
-              <Route path="/track-complaint" element={<TrackComplaint />} />
-              <Route path="/unauthorized" element={<Unauthorized />} />
-
-              {/* ===== CITIZEN ROUTES ===== */}
-              <Route
-                path="/dashboard"
-                element={
-                  <ProtectedRoute>
-                    <CitizenDashboard />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/submit-complaint"
-                element={
-                  <ProtectedRoute>
-                    <SubmitComplaint />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/complaints/:id"
-                element={
-                  <ProtectedRoute>
-                    <ComplaintDetail />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/profile"
-                element={
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/support"
-                element={
-                  <ProtectedRoute>
-                    <Support />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/feedback"
-                element={
-                  <ProtectedRoute>
-                    <Feedback />
-                  </ProtectedRoute>
-                }
-              />
-
-              {/* ===== OFFICER ROUTES ===== */}
-              <Route
-                path="/officer"
-                element={
-                  <RoleRoute roles={['officer']}>
-                    <OfficerLayout />
-                  </RoleRoute>
-                }
-              >
-                <Route index element={<OfficerDashboard />} />
-                <Route path="complaints" element={<OfficerComplaints />} />
-                <Route path="complaints/:id" element={<OfficerComplaintDetail />} />
-                <Route path="reports" element={<OfficerReports />} />
-              </Route>
-
-              {/* ===== ADMIN ROUTES ===== */}
-              <Route
-                path="/admin"
-                element={
-                  <RoleRoute roles={['admin']}>
-                    <AdminLayout />
-                  </RoleRoute>
-                }
-              >
-                <Route index element={<AdminDashboard />} />
-                <Route path="users" element={<ManageUsers />} />
-                <Route path="complaints" element={<ManageComplaints />} />
-                <Route path="complaints/:id" element={<AdminComplaintDetail />} />
-                <Route path="categories" element={<ManageCategories />} />
-                <Route path="departments" element={<ManageDepartments />} />
-                <Route path="reports" element={<GenerateReports />} />
-                <Route path="support" element={<ManageSupport />} />
-                <Route path="feedbacks" element={<ManageFeedbacks />} />
-              </Route>
-
-              {/* ===== 404 ===== */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
-
-          <Footer />
-        </div>
+        <AppContent />
 
         <Toaster
           position="top-right"

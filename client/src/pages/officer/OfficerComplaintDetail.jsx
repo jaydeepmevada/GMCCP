@@ -67,7 +67,7 @@ const OfficerComplaintDetail = () => {
   if (!complaint) return <div className="text-center py-12"><p>Complaint not found</p></div>;
 
   return (
-    <div>
+    <div className="animate-fade-in-up">
       <Link to="/officer/complaints" className="inline-flex items-center gap-1 text-blue-400 hover:underline text-sm mb-6">
         <HiArrowLeft className="w-4 h-4" /> Back to Complaints
       </Link>

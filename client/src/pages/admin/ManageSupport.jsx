@@ -39,7 +39,7 @@ const ManageSupport = () => {
   const statusColor = { Open: 'bg-blue-900/30 text-blue-400', Responded: 'bg-green-100 text-green-700', Closed: 'bg-gray-100 text-gray-300' };
 
   return (
-    <div>
+    <div className="animate-fade-in-up">
       <h1 className="text-2xl font-bold text-gray-100 mb-6">Manage Help/Support</h1>
 
       {loading ? (
